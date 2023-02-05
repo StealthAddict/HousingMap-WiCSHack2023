@@ -5,7 +5,7 @@ import { scaleQuantize } from "d3-scale";
 import { Tooltip, TooltipWrapper } from 'react-tooltip'
 import Overlay from 'react-bootstrap'
 
-
+// Tooltip not working, no time to troubleshoot
 
 
 const topoGeoLink = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json"

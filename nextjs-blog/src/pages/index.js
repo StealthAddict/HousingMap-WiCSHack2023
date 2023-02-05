@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
 import { Inter } from '@next/font/google'
 import styles from 'import/styles/Home.module.css'
 import MapChart from './MapChart'
