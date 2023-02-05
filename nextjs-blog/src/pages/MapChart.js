@@ -1,53 +1,62 @@
-import React, { useState, useEffect } from "react";
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { scaleQuantile } from "d3-scale";
-import { csv } from "d3-fetch";
-import { govCensus } from "./gov_census";
+import React, { useState } from "react";
+import { ComposableMap, Geographies, Geography, ZoomableGroup, Annotation, Marker } from "react-simple-maps";
+import kaggleIncome from '../data/csvjson_kaggle_income.json'
+import { scaleQuantize } from "d3-scale";
+import { Tooltip, TooltipWrapper } from 'react-tooltip'
+import Overlay from 'react-bootstrap'
+
+
 
 
 const topoGeoLink = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json"
 
+export default function MapChart( props ) {
 
-// TODO: Find a way to be able to populate map counties with different colors
-// based on something like income.
-// This is currently using react simple maps.
-export default function MapChart() {
-  const [data, setData] = useState([]);
+  const [show, setShow] = useState(false);
 
-  const colorScale = scaleQuantile()
-    .domain(data.map(d => d.state))
+  const colorScale = scaleQuantize()
+    .domain([10000, 100000])
     .range([
-      "#ffedea",
-      "#ffcec5",
-      "#ffad9f",
-      "#ff8a75",
-      "#ff5533",
-      "#e2492d",
-      "#be3d26",
-      "#9a311f",
-      "#782618"
-    ]);
+      "#1B2F11",
+    "#29481A",
+    "#375F22",
+    "#44772B",
+    "#518E33",
+    "#5FA53C",
+    "#6CBC45",
+    "#7FC45C",
+    "#91CD73"
+  ]);
 
-  function onMapLoad() {
-    // csv("./datasets/est21all.csv").then(counties => {
-    //   setData(counties);
-    // });
-    console.log('hello world')
+  function onSelect(){
+    setShow(!show);
   }
 
-
   return (
-    <ComposableMap projection="geoAlbersUsa">
-      <Geographies geography={topoGeoLink} onLoad={onMapLoad}>
-        {({ geographies }) =>
-          geographies.map((geo) => (
-            <Geography key={geo.rsmKey} geography={geo} 
-            fill={"blue"} // changes color of fill, can be individualized to county
-            />
-          ))
-        }
-      </Geographies>
-    </ComposableMap>
-  )
+    <>
+      <ComposableMap projection="geoAlbersUsa" className="geoMap">
+        <ZoomableGroup center={[0,0]} zoom={1}>
+        <Geographies geography={topoGeoLink}>
+          {({ geographies }) => (
+            <>
+            {geographies.map((geo) => {
+              const cur = kaggleIncome.find((s) => s.County.slice(0, -7) === geo.properties.name);
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill={colorScale(cur ? cur.Mean : "#EEE")}
+                  stroke="#15312E"
+                />
+              );
+            })}
+            </>
+          )
+          }
+        </Geographies>
+        </ZoomableGroup>
+      </ComposableMap>
+    </>
+  );
 }
 
