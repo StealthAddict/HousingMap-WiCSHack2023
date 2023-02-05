@@ -51,6 +51,11 @@ export default function Home() {
             </select></td>
             <Button variant="primary" type="submit" style={{color:"#F0EBCE"}}>Search</Button>
           </tr>
+          <tr>
+            <td></td>
+            <td><input type="range"></input></td>
+            <td><input type="range"></input></td>
+          </tr>
           </tbody>
         </Table>
         <h3 style={{color:"#F0EBCE", margin:"15px"}}>OR</h3>
